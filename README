@@ -1,0 +1,5 @@
+This is a simple test to show that spatial audio is not working properly in Howler 2.0.2
+
+In index change the cdn version of Howler to 2.0.2 to make spatial audio stop working.
+
+Move the mouse left and right over the page to position the audio spatially around a sphere.

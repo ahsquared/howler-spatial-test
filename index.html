@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>JS Bin</title>
-<script src="https://unpkg.com/@reactivex/rxjs@5.0.0-beta.7/dist/global/Rx.umd.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.2/howler.min.js"></script>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.0.0-beta.7/dist/global/Rx.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.1/howler.min.js"></script>
 </head>
 <body>
 <script>
@@ -28,16 +28,15 @@ var roundDec = (num, dec) => {
     return Math.round(num * pow) / pow;
 };
 var pan$ = Rx.Observable.fromEvent(
-  document, "mousemove")
-.throttleTime(150)
-.map(e => {
-  return {x: e.pageX, y: e.pageY};
-});
+    document, "mousemove")
+  .throttleTime(150)
+  .map(function(e) {
+    return {x: e.pageX, y: e.pageY};
+  });
 
-pan$.subscribe(({x, y}) => {
-  console.log(x, y, window.innerWidth);
-  var hlookat = ((x / window.innerWidth) * 360) - 180;
-  var vlookat = ((y / window.innerHeight) * 180) - 90;
+pan$.subscribe(function(e) {
+  var hlookat = ((e.x / window.innerWidth) * 360) - 180;
+  var vlookat = ((e.y / window.innerHeight) * 180) - 90;
   var theta = ((hlookat % 360) + 90) * (Math.PI / 180);
     var phi = ((vlookat % 180) - 90) * (Math.PI / 180);
     var r = 1;
@@ -48,8 +47,6 @@ pan$.subscribe(({x, y}) => {
     };
   console.log("pos", pos);
   Howler.pos(pos.x, pos.y, pos.z);
-  //console.log("pan", (2 * (x / window.innerWidth)) - 1);
-  //howl.stereo((2 * (x / window.innerWidth)) - 1);
 });
 
 
