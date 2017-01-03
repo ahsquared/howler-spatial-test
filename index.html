@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+<script src="https://unpkg.com/@reactivex/rxjs@5.0.0-beta.7/dist/global/Rx.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.2/howler.min.js"></script>
+</head>
+<body>
+<script>
+
+var howl = new Howl({
+  src: "example.ogg",
+  volume: 0.5,
+  autoplay: true,
+  loop: true,
+  pos: [0, 0, 0],
+  orientation: [1, 0, 0],
+  pannerAttr: {
+    panningModel: 'HRTF',
+    refDistance: 0.8,
+    rolloffFactor: 2.5,
+  }
+});
+var roundDec = (num, dec) => {
+    let pow = Math.pow(10, dec);
+    return Math.round(num * pow) / pow;
+};
+var pan$ = Rx.Observable.fromEvent(
+  document, "mousemove")
+.throttleTime(150)
+.map(e => {
+  return {x: e.pageX, y: e.pageY};
+});
+
+pan$.subscribe(({x, y}) => {
+  console.log(x, y, window.innerWidth);
+  var hlookat = ((x / window.innerWidth) * 360) - 180;
+  var vlookat = ((y / window.innerHeight) * 180) - 90;
+  var theta = ((hlookat % 360) + 90) * (Math.PI / 180);
+    var phi = ((vlookat % 180) - 90) * (Math.PI / 180);
+    var r = 1;
+  var pos = {
+        x: roundDec(r * Math.sin(phi) * Math.cos(theta), 2),
+        y: roundDec(r * Math.cos(phi), 2),
+        z: roundDec(r * Math.sin(phi) * Math.sin(theta), 2)
+    };
+  console.log("pos", pos);
+  Howler.pos(pos.x, pos.y, pos.z);
+  //console.log("pan", (2 * (x / window.innerWidth)) - 1);
+  //howl.stereo((2 * (x / window.innerWidth)) - 1);
+});
+
+
+</script>
+</body>
+</html>
+
